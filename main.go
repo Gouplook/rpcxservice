@@ -24,6 +24,8 @@ type Arith struct {
 
 }
 
+
+// 为客户端提供服务
 func (t *Arith) Mul(ctx context.Context, args example.Args, reply *example.Reply) error {
 	reply.C = args.A * args.B
 	fmt.Println("Mul C=", reply.C)
@@ -39,15 +41,17 @@ func (a *Arith) Add (ctx context.Context,args example.Args, reply *example.Reply
 
 // server
 func main(){
+
 	flag.Parse()
 	s := server.NewServer()
-
-	s.RegisterName("Arith", new(Arith),"")
-	err := s.Serve("tcp", *addr)
+	err := s.RegisterName("Arith",new(Arith), "")
 	if err != nil {
 		panic(err)
 	}
-
+	err = s.Serve("tcp", *addr)
+	if err != nil {
+		panic(err)
+	}
 
 	fmt.Println("service ....")
 }
